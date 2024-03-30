@@ -2,66 +2,50 @@ using static GeneratorData;
 
 public class SavedSearchGenerator
 {
-    private static Random random = new Random();
-    private static List<int> apartmentRoomDistribution = Enumerable.Repeat(1, 40).Concat(Enumerable.Repeat(2, 40)).Concat(Enumerable.Repeat(3, 20)).ToList();
+    private static readonly Random random = new(-2049);
+    private static readonly int[] apartmentRoomDistribution = Enumerable.Repeat(1, 40).Concat(Enumerable.Repeat(2, 40)).Concat(Enumerable.Repeat(3, 20)).ToArray();
 
-    public static IEnumerable<SavedSearchQuery> GenerateSavedSearches()
+    public static IEnumerable<SavedSearch> GenerateSavedSearches()
     {
-        while(true)
+        while (true)
         {
             var location = GetRandomLocation();
-            var maxBedrooms = GetRandomBedrooms(location, out PropertyType type);
-            var maxPrice = GetRandomMaxPrice(maxBedrooms, location, type);
+            var type = random.Next(2) == 1 ? PropertyType.Apartment : PropertyType.House;
+            var maxBedrooms = GetRandomBedrooms(type);
+            var listingStatus = (ListingStatus)random.Next((int)ListingStatus.Sold);
+            var maxPrice = GetRandomMaxPrice(maxBedrooms, listingStatus);
 
-            var search = new SavedSearchQuery(location)
+            var search = new SavedSearch(location)
             {
-                MinBedrooms= maxBedrooms - 1,
+                MinBedrooms = maxBedrooms - 1,
                 MaxBedrooms = maxBedrooms,
-                Type = type,
-                MaxPrice = maxPrice
+                PropertyType = type,
+                MinPrice = 0,
+                MaxPrice = maxPrice,
+                ListingType = listingStatus,
             };
 
             yield return search;
         }
     }
 
-    private static string GetRandomLocation()
+    private static string GetRandomLocation() => random.NextDouble() switch
     {
-        if (random.NextDouble() < 0.8)
-        {
-            return random.NextDouble() < 0.5 ? SydneySuburbs[random.Next(SydneySuburbs.Count)] : MelbourneSuburbs[random.Next(MelbourneSuburbs.Count)];
-        }
-        else
-        {
-            return OtherLocations[random.Next(OtherLocations.Count)];
-        }
-    }
+        < 0.34 => SydneySuburbs[random.Next(SydneySuburbs.Length)],
+        < 0.67 => MelbourneSuburbs[random.Next(MelbourneSuburbs.Length)],
+        _ => OtherLocations[random.Next(OtherLocations.Length)]
+    };
 
-    private static int GetRandomBedrooms(string location, out PropertyType type)
+    private static int GetRandomBedrooms(PropertyType type) => type switch
     {
-        // Adjust logic based on property type preferences
-        type = PropertyType.House;
-        if (SydneySuburbs.Contains(location) || MelbourneSuburbs.Contains(location))
-        {
-            type = PropertyType.Apartment;
-            return apartmentRoomDistribution[random.Next(apartmentRoomDistribution.Count)];
-        }
-        else
-        {
-            return random.Next(3, 7); // 3 to 6 bedrooms for houses
-        }
-    }
+        PropertyType.Apartment => apartmentRoomDistribution[random.Next(apartmentRoomDistribution.Length)],
+        _ => random.Next(1, 7)
+    };
 
-    private static int? GetRandomMaxPrice(int bedrooms, string location, PropertyType type)
+    private static int? GetRandomMaxPrice(int bedrooms, ListingStatus listingStatus) => listingStatus switch
     {
-        // Adjust pricing logic to reflect similar distribution to property listings
-        if (type == PropertyType.Apartment && (SydneySuburbs.Contains(location) || MelbourneSuburbs.Contains(location)))
-        {
-            return bedrooms * 650000; // Simulating high price per bedroom for CBD apartments
-        }
-        else
-        {
-            return (type == PropertyType.House ? 350000 : 250000) * bedrooms + (type == PropertyType.House ? 400000 : 300000);
-        }
-    }
+        ListingStatus.ForRent => random.Next(100, 650) * bedrooms,
+        ListingStatus.ForSale => bedrooms * 150_000,
+        _ => null
+    };
 }

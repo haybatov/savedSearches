@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-internal class GeneratorData
+﻿internal class GeneratorData
 {
-    public static List<string> SydneySuburbs =
+    public static string[] SydneySuburbs =
     [
         "Sydney", "Bondi", "Manly", "Parramatta", "Chatswood", "Surry Hills", "Newtown",
         "Glebe", "Redfern", "Paddington", "Darlinghurst", "Balmain", "Leichhardt",
@@ -18,7 +11,7 @@ internal class GeneratorData
         "Alexandria", "Barangaroo", "Millers Point", "St Leonards", "Artarmon"
     ];
 
-    public static List<string> SydneyCbdSuburbs =
+    public static string[] SydneyCbdSuburbs =
     [
         "Surry Hills", "Darlinghurst", "North Sydney", "Sydney", "The Rocks",
         "Woolloomooloo", "Pyrmont", "Surry Hills", "Ultimo", "Haymarket",
@@ -26,17 +19,17 @@ internal class GeneratorData
         "Alexandria", "Barangaroo", "Millers Point"
     ];
 
-    public static List<string> MelbourneSuburbs = new List<string>
-    {
+    public static string[] MelbourneSuburbs =
+    [
         "Melbourne CBD", "St Kilda", "Fitzroy", "Richmond", "South Yarra", "Docklands",
         "Carlton", "Southbank", "Port Melbourne", "Footscray", "Yarraville", "Brunswick",
         "Northcote", "Prahran", "Malvern", "Kew", "Hawthorn", "Camberwell", "Balwyn",
         "Brighton", "Sandringham", "Mordialloc", "Bentleigh", "Caulfield", "Toorak",
         "West Melbourne", "East Melbourne", "North Melbourne", "South Melbourne",
         "Parkville", "Collingwood", "Albert Park"
-    };
+    ];
 
-    public static List<string> MelbourneCbdSuburbs =
+    public static string[] MelbourneCbdSuburbs =
     [
         "Melbourne CBD",  "Southbank", "Docklands", "West Melbourne",
         "East Melbourne", "North Melbourne", "South Melbourne",
@@ -46,12 +39,12 @@ internal class GeneratorData
     ];
 
 
-    public static List<string> OtherLocations = new List<string>
-    {
+    public static string[] OtherLocations =
+    [
         "Brisbane", "Perth", "Adelaide", "Hobart", "Canberra", "Darwin", "Gold Coast",
         "Newcastle", "Wollongong", "Geelong", "Sunshine Coast", "Townsville", "Cairns",
         "Toowoomba", "Ballarat", "Bendigo", "Albury", "Launceston", "Mackay", "Rockhampton"
-    };
+    ];
 
 }
 
